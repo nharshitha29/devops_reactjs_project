@@ -8,11 +8,11 @@ app.use(cors());
 app.use(express.json());
 
 const pool = new Pool({
-  host: "localhost",
-  port: 5432,
-  database: "devopsdb",
-  user: "postgres",
-  password: "Neeli@21##",
+  host: process.env.DB_HOST || "localhost",
+  port: process.env.DB_PORT || 5432,
+  database: process.env.DB_NAME || "devopsdb",
+  user: process.env.DB_USER || "postgres",
+  password: process.env.DB_PASSWORD,
 });
 
 // Health check

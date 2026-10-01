@@ -12,14 +12,14 @@ function App() {
 
     try {
       const messageResponse = await fetch(
-        "http://localhost:5000/api/message"
+        "/api/message"
       );
 
       const messageData = await messageResponse.json();
       setMessage(messageData.message);
 
       const healthResponse = await fetch(
-        "http://localhost:5000/health"
+        "/health"
       );
 
       const healthData = await healthResponse.json();
