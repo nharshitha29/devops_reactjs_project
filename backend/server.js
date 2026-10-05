@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const { Pool } = require("pg");
@@ -12,7 +13,7 @@ const pool = new Pool({
   port: process.env.DB_PORT || 5432,
   database: process.env.DB_NAME || "devopsdb",
   user: process.env.DB_USER || "postgres",
-  password: process.env.DB_PASSWORD,
+  password: process.env.DB_PASSWORD ,
 });
 
 // Health check
