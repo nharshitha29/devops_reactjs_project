@@ -1,0 +1,70 @@
+services:
+
+  db:
+    image: postgres:18
+    container_name: db
+
+    environment:
+      POSTGRES_DB: devopsdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+    ports:
+      - "5432:5432"
+
+    networks:
+      - devops-network
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d devopsdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+  be:
+    image: nharshitha29/devops-backend:1.0
+    container_name: be
+
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: devopsdb
+      DB_USER: postgres
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+
+    ports:
+      - "5000:5000"
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    networks:
+      - devops-network
+
+
+  fe:
+    image: nharshitha29/devops-frontend:1.1
+    container_name: fe
+
+    ports:
+      - "8080:80"
+
+    depends_on:
+      - be
+
+    networks:
+      - devops-network
+
+
+volumes:
+  postgres_data:
+
+
+networks:
+  devops-network:
+    driver: bridge
