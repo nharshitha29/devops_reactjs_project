@@ -1,10 +1,8 @@
 name: react ci pipeline
 on:
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  checks: write
+ push:
+   branches:
+      - main
 jobs:
    build:
     runs-on: ubuntu-latest
@@ -16,10 +14,18 @@ jobs:
            uses: actions/setup-node@v5
            with:
               node-version: 22
+
          - name: Install Dependencies
+           working-directory: ./backend
            run: npm install
 
+         - name: Install Dependencies
+           working-directory: ./frontend
+           run: npm install
+
+
          - name: Run Tests
+           working-directory: ./frontend
            run: |
               npx vitest --run \
               --reporter=default \
@@ -31,9 +37,10 @@ jobs:
            if: always()
            with:
               files: |
-                 test-results.xml
+                 frontend/test-results.xml
 
          - name: Build React App
+           working-directory: ./frontend
            run: npm run build
          
 
@@ -41,4 +48,4 @@ jobs:
            uses: actions/upload-artifact@v4
            with:
              name: react-build
-             path: dist/   
+             path: frontend/dist/
