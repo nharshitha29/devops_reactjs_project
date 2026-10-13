@@ -1,8 +1,12 @@
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { afterEach, describe, it, expect } from 'vitest';
+import { render, screen, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/vitest';
 import { useState } from 'react';
+
+afterEach(() => {
+  cleanup();
+});
 
 function App() {
   const [count, setCount] = useState(0);
@@ -47,3 +51,4 @@ describe('App component', () => {
     expect(screen.getByText('Count: 1')).toBeInTheDocument();
   });
 });
+
