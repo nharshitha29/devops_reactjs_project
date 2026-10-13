@@ -1,0 +1,44 @@
+name: react ci pipeline
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  checks: write
+jobs:
+   build:
+    runs-on: ubuntu-latest
+    steps:
+         - name: Checkout Repository
+           uses: actions/checkout@v5
+
+         - name: Setup Node.js
+           uses: actions/setup-node@v5
+           with:
+              node-version: 22
+         - name: Install Dependencies
+           run: npm install
+
+         - name: Run Tests
+           run: |
+              npx vitest --run \
+              --reporter=default \
+              --reporter=junit \
+              --outputFile=test-results.xml
+
+         - name: Publish Test Results
+           uses: EnricoMi/publish-unit-test-result-action@v2
+           if: always()
+           with:
+              files: |
+                 test-results.xml
+
+         - name: Build React App
+           run: npm run build
+         
+
+         - name: Upload Build Artifact
+           uses: actions/upload-artifact@v4
+           with:
+             name: react-build
+             path: dist/   
