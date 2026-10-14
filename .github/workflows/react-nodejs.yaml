@@ -6,12 +6,18 @@ on:
 permissions:
   contents: read
   checks: write
+  security-events: write
 jobs:
    build:
     runs-on: ubuntu-latest
     steps:
          - name: Checkout Repository
            uses: actions/checkout@v5
+         
+         - name: Initialize CodeQL
+           uses: github/codeql-action/init@v4
+           with:
+              languages: javascript-typescript
 
          - name: Setup Node.js
            uses: actions/setup-node@v5
@@ -45,10 +51,14 @@ jobs:
          - name: Build React App
            working-directory: ./frontend
            run: npm run build
-         
 
+         - name: Perform CodeQL Analysis
+            uses: github/codeql-action/analyze@v4
+         
          - name: Upload Build Artifact
-           uses: actions/upload-artifact@v4
-           with:
-             name: react-build
-             path: frontend/dist/
+            uses: actions/upload-artifact@v4
+            with:
+              name: react-build
+              path: frontend/dist/
+
+         
