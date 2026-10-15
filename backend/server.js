@@ -1,19 +1,31 @@
+
 require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
 const { Pool } = require("pg");
+const rateLimit = require("express-rate-limit");
 
 const app = express();
 
+// Rate limiter: maximum 100 requests per IP per minute
+const apiLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 app.use(cors());
 app.use(express.json());
+app.use("/api", apiLimiter);
 
 const pool = new Pool({
   host: process.env.DB_HOST || "localhost",
-  port: process.env.DB_PORT || 5432,
+  port: Number(process.env.DB_PORT) || 5432,
   database: process.env.DB_NAME || "devopsdb",
   user: process.env.DB_USER || "postgres",
-  password: process.env.DB_PASSWORD ,
+  password: process.env.DB_PASSWORD,
 });
 
 // Health check
@@ -42,8 +54,8 @@ app.get("/api/message", (req, res) => {
   });
 });
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Backend running on http://localhost:${PORT}`);
+  console.log(`Backend running on port ${PORT}`);
 });
