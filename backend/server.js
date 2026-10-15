@@ -1,4 +1,5 @@
 
+
 require("dotenv").config();
 
 const express = require("express");
@@ -8,10 +9,18 @@ const rateLimit = require("express-rate-limit");
 
 const app = express();
 
-// Rate limiter: maximum 100 requests per IP per minute
+// Rate limiter for API routes: 100 requests per IP per minute
 const apiLimiter = rateLimit({
   windowMs: 60 * 1000,
   limit: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Rate limiter for health check: 120 requests per IP per minute
+const healthLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  limit: 120,
   standardHeaders: true,
   legacyHeaders: false,
 });
@@ -29,7 +38,7 @@ const pool = new Pool({
 });
 
 // Health check
-app.get("/health", async (req, res) => {
+app.get("/health", healthLimiter, async (req, res) => {
   try {
     await pool.query("SELECT 1");
 
