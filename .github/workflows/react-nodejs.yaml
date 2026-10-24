@@ -60,34 +60,27 @@ jobs:
            with:
               name: react-build
               path: frontend/dist/
-        
-         - name: Build Docker Image
-           working-directory: ./backend
-           run: |
-              docker build -t ${{ vars.DOCKERHUB_USERNAME }}/be:1.0 .
 
          - name: Scan Docker Image with Trivy
            uses: aquasecurity/trivy-action@v0.36.0
-           with:
-             scan-type: image
-             image-ref: nharshitha29/be:1.0
-             format: table
-             severity: HIGH,CRITICAL
-             exit-code: '1'
 
+         - name: Build Docker Image
+           working-directory: ./backend
+           run: |
+              docker build -t ${{ vars.DOCKERHUB_USERNAME }}/be:1.1 .
+
+         - name: scan the images
+           run: |
+             trivy image --severity HIGH,CRITICAL \
+             --format json \
+             -o trivy-report.json \
+             nharshitha29/be:1.1
+      
+          
          - name: Build Docker Image
            working-directory: ./frontend
            run: |
               docker build -t ${{ vars.DOCKERHUB_USERNAME }}/fe:1.0 .
-
-         - name: Scan Docker Image with Trivy
-           uses: aquasecurity/trivy-action@v0.36.0
-           with:
-             scan-type: image
-             image-ref: nharshitha29/fe:1.0
-             format: table
-             severity: HIGH,CRITICAL
-             exit-code: '1'
 
          - name: display Image
            working-directory: ./frontend
