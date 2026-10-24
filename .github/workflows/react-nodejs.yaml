@@ -64,7 +64,7 @@ jobs:
          - name: Build Docker Image
            working-directory: ./backend
            run: |
-              docker build -t ${{ secrets.DOCKER_USERNAME }}/be:1.0 .
+              docker build -t ${{ vars.DOCKERHUB_USERNAME }}/be:1.0 .
 
          - name: display Image
            working-directory: ./backend
@@ -74,7 +74,7 @@ jobs:
          - name: Build Docker Image
            working-directory: ./frontend
            run: |
-              docker build -t ${{ secrets.DOCKER_USERNAME }}/fe:1.0 .
+              docker build -t ${{ vars.DOCKERHUB_USERNAME }}/fe:1.0 .
 
          - name: display Image
            working-directory: ./frontend
