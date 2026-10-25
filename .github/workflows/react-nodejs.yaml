@@ -147,7 +147,7 @@ jobs:
          - name: Get AKS Credentials
            run: |
               az aks get-credentials \
-              --resource-group myRG \
+              --resource-group rg-devops-learning\
               --name myAKSCluster \
               --overwrite-existing
 
