@@ -4,8 +4,8 @@ WORKDIR /app
 RUN npm install
 RUN npm run build
 
-FROM nginx:alpine
+FROM cgr.dev/chainguard/nginx:latest
 WORKDIR /app
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder  /app/dist /usr/share/nginx/html
-EXPOSE 80
+EXPOSE 8080

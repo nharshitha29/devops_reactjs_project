@@ -1,6 +1,6 @@
-FROM node:20-alpine
+FROM cgr.dev/chainguard/node
 WORKDIR /app
 COPY . /app
-RUN npm install
+RUN npm ci
 EXPOSE 5000
-CMD ["node", "server.js"]
+CMD ["node","server.js"]
