@@ -1,5 +1,5 @@
 resource "azurerm_resource_group" "base" {
-  name     = "rg-devops-learning"
+  name     = "myRG"
   location = "Central India"
 
 }
