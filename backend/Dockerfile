@@ -3,4 +3,4 @@ WORKDIR /app
 COPY . /app
 RUN npm ci
 EXPOSE 5000
-CMD ["node","server.js"]
+CMD ["server.js"]
